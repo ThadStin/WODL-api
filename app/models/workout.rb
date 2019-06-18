@@ -5,9 +5,15 @@ class Workout
   # add attribute readers for instance accesss
   attr_reader :id, :name, :rx, :hero_wod
 
+  # connect to heroku database
+  if(ENV['DATABASE_URL'])
+       uri = URI.parse(ENV['DATABASE_URL'])
+       DB = PG.connect(uri.hostname, uri.port, nil, nil, uri.path[1..-1], uri.user, uri.password)
+   else
   # connect to postgres
   DB = PG.connect({:host => "localhost", :port => 5432, :dbname => 'WODL-api_development'})
-
+  end
+  
   # initialize options hash
   def initialize(opts = {}, id = nil)
     @id = id.to_i
